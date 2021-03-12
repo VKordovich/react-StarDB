@@ -1,29 +1,39 @@
 import React from 'react';
 
 import AppHeader from '../app-header';
-import AppItemList from '../app-item-list';
-import AppPeopleDetails from '../app-people-details';
-import AppPlanetDetails from '../app-planet-details';
-import AppStarshipDetails from '../app-starship-details';
 import AppRandomPlanet from '../app-random-planet';
+import PeoplePage from '../people-page';
+import ErrorButton from '../app-error-button'
 
 import './app.css';
 
 
 export default class App extends React.Component{
-    render(){
+    state = {
+        toggle: true,
+        wasError: false
+    }
+    toggleRandomPlanet = () => {
+        this.setState({toggle: !this.state.toggle})
+    }
+
+    componentDidCatch() {
+        this.setState({wasError: true})
+    }
+
+    render(){ 
+        const {toggle} = this.state
+        const planetHidden = toggle ? <AppRandomPlanet/> : null
         return(
             <div className='app-main'>
                 <AppHeader/>
-                <AppRandomPlanet/>
-                <div>
-                    <div>
-                        <AppItemList/>
-                    </div>
-                    <div>
-                        <AppPeopleDetails/>
-                    </div>
-                </div>
+                {planetHidden}
+                <button
+                   className = "toggle-planet btn btn-warning btn-lg"
+                   onClick = {this.toggleRandomPlanet}>Toggle Random Planet 
+                </button>
+                <ErrorButton/>
+                <PeoplePage />
             </div>
         );
     }

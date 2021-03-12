@@ -1,6 +1,7 @@
 import React from 'react';
 import SwapiService from '../../service/service'
 import Spinner from '../app-spinner/spinner'
+import ErrorIndicator from '../app-error-indicator/error-indicator'
 import './app-random-planet.css'
 
 
@@ -9,12 +10,16 @@ export default class AppRandomPlanet extends React.Component{
 
   state = {
     planet: {},
-    loading: true
+    loading: true,
+    error: false
+  }
+  componentDidMount(){
+    this.updateFromServer();
+    setInterval(this.updateFromServer, 15000);
   }
 
-  constructor() {
-    super();
-    this.updateFromServer();
+  onErrorLoad = (error) => {
+    this.setState({error: true, loading: false})
   }
 
   onLoadedPlanet = (planet) => {
@@ -22,17 +27,21 @@ export default class AppRandomPlanet extends React.Component{
   }
 
   updateFromServer = () => {
-    const id = Math.floor(Math.random() * 25) + 2;
-    this.swapiService.getOnePlanet(id).then(this.onLoadedPlanet)
+    const id = Math.floor(Math.random() * 25) + 3;
+    this.swapiService.getOnePlanet(id)
+                     .then(this.onLoadedPlanet)
+                     .catch(this.onErrorLoad)
   }
   
     render(){
-      const {planet, loading}=this.state
+      const {planet, loading, error}=this.state
+      const errorLoad = error ? <ErrorIndicator/> : null;
       const spinner = loading ? <Spinner/> : null;
-      const content = !loading ? <PlanetView planet={planet}/> : null;
+      const content = !(loading || error) ? <PlanetView planet={planet}/> : null;
 
         return(
           <div className="random-planet jumbotron rounded">
+          {errorLoad}
           {spinner}
           {content}
           </div>
@@ -41,13 +50,13 @@ export default class AppRandomPlanet extends React.Component{
 } 
 
 const PlanetView = ({planet}) => {
-  const {id, planetName, population, rotationPeriod, diameter} = planet;
+  const {id, name, population, rotationPeriod, diameter} = planet;
   return (
     <React.Fragment>
         <img className="planet-image"
                  src={`https://starwars-visualguide.com/assets/img/planets/${id}.jpg`}/>
             <div>
-              <h4>{planetName}</h4>
+              <h4>{name}</h4>
               <ul className="list-group list-group-flush">
                 <li className="list-group-item">
                   <span className="term">Population</span>

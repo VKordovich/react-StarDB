@@ -10,6 +10,17 @@ export default class SwapiService {
         return body;
     }
 
+    getPersonImage = ({id}) => {
+        return `https://starwars-visualguide.com/assets/img/characters/${id}.jpg`
+    }
+
+    getPlanetImage = ({id}) => {
+        return `https://starwars-visualguide.com/assets/img/planets/${id}.jpg`
+    }
+    getStarshipImage = ({id}) => {
+        return `https://starwars-visualguide.com/assets/img/starships/${id}.jpg`
+    }
+
     getAllPeople = async () => {
         const result = await this.getResourse(`/people/`);
         return result.results.map(this._transformPeople);
@@ -35,7 +46,7 @@ export default class SwapiService {
         return result.results.map(this._transformStarship);
     }
 
-    getStarShip = async (id) => {
+    getOneStarShip = async (id) => {
         const starShip = await this.getResourse(`/starships/${id}`);
         return this._transformStarship(starShip);
     }
@@ -48,7 +59,7 @@ export default class SwapiService {
     _transformPlanet = (planet) => {
         return {
             id:this._getIdFromUrl(planet.url),
-            planetName: planet.name,
+            name: planet.name,
             population: planet.population,
             rotationPeriod: planet.rotation_period,
             diameter: planet.diameter
@@ -73,9 +84,10 @@ export default class SwapiService {
         return {
             id:this._getIdFromUrl(person.url),
             name: person.name,
-            gender: person.population,
-            birthYear: person.birthYear,
-            eyeColor: person.eyeColor
+            height: person.height,
+            hairColor: person.hair_color,
+            mass: person.mass,
+            birthYear: person.birth_year
         }
     }
 }

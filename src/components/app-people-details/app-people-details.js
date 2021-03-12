@@ -1,31 +1,70 @@
 import React from 'react';
-import './app-people-details.css'
+import SwapiService from '../../service/service';
+import Spinner from '../app-spinner/spinner';
+import ErrorButton from '../app-error-button'
+import './app-people-details.css';
+
 
 export default class AppPeopleDetails extends React.Component{
+  swapiService = new SwapiService();
+
+  state = {
+    item: {},
+    loading: true,
+    image: null
+  }
+
+  componentDidMount() {
+    this.onUpdatePeople()
+  }
+
+  componentDidUpdate(prevProps) {
+    if(this.props.sendId !== prevProps.sendId){
+      this.onUpdatePeople()
+    }
+  }
+
+  onUpdatePeople = () => {
+    const {sendId, getOneItem, getImageUrl}= this.props
+    getOneItem(sendId)
+                      .then((item) => {
+                        this.setState({item, 
+                                       loading:false,
+                                       image: getImageUrl(item)})
+                      })
+  }
+
     render(){
+      const {item, loading, image} = this.state
+      const blockLi = React.Children.map(this.props.children, (child) => {
+        return React.cloneElement(child, {item});
+      })
+   
+      const peopleView = !loading ? <InformationView item={item} image={image} li={blockLi}/> : null;
+      const spinner = loading ? <Spinner/> : null;
         return(
             <div className="person-details card">
-            <img className="person-image"
-              src="https://starwars-visualguide.com/assets/img/characters/3.jpg" />
-    
-            <div className="card-body">
-              <h4>R2-D2</h4>
-              <ul className="list-group list-group-flush">
-                <li className="list-group-item">
-                  <span className="term">Gender</span>
-                  <span>male</span>
-                </li>
-                <li className="list-group-item">
-                  <span className="term">Birth Year</span>
-                  <span>43</span>
-                </li>
-                <li className="list-group-item">
-                  <span className="term">Eye Color</span>
-                  <span>red</span>
-                </li>
-              </ul>
-            </div>
+              {spinner}
+              {peopleView}
           </div>
         );
     }
 } 
+
+
+const InformationView = ({item, image, li}) => {
+  const {name} = item
+  return (
+    <React.Fragment>
+            <img className="person-image" src={image} />
+            <div className="card-body">
+              <h4>{name}</h4>
+              <ul className="list-group list-group-flush">
+                {li}
+                <ErrorButton/>
+              </ul>
+            </div>
+
+    </React.Fragment>
+  )
+}

@@ -4,11 +4,14 @@ import AppHeader from '../app-header';
 import AppRandomPlanet from '../app-random-planet';
 import PeoplePage from '../people-page';
 import ErrorButton from '../app-error-button'
+import {SwapiServiceProvider} from '../swapi-service-context'
+import SwapiService from '../../service/service';
 
 import './app.css';
 
 
 export default class App extends React.Component{
+    swapiService = new SwapiService();
     state = {
         toggle: true,
         wasError: false
@@ -25,6 +28,7 @@ export default class App extends React.Component{
         const {toggle} = this.state
         const planetHidden = toggle ? <AppRandomPlanet/> : null
         return(
+            <SwapiServiceProvider value = {this.swapiService}>
             <div className='app-main'>
                 <AppHeader/>
                 {planetHidden}
@@ -35,6 +39,7 @@ export default class App extends React.Component{
                 <ErrorButton/>
                 <PeoplePage />
             </div>
+            </SwapiServiceProvider>
         );
     }
 }

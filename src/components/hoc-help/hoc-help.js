@@ -22,7 +22,6 @@ const hocFunc = (View, getData) => {
       }
   
       render() {
-        console.log(this.props)
         const {data, loading} = this.state
         const spinner = loading ? <Spinner/> : null;
         return <View {...this.props} spinner={spinner} data={data}/>

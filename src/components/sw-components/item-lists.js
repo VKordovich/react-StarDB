@@ -1,4 +1,3 @@
-import React from 'react';
 import SwapiService from '../../service/service';
 import AppItemList from '../app-item-list';
 import hocFunc from '../hoc-help/hoc-help'

@@ -1,10 +1,12 @@
 import React from 'react';
-import SwapiService from '../../service/service';
 import AppPeopleDetails from '../app-people-details';
 import AppRecord from '../app-record';
 import {SwapiServiceConsumer} from '../swapi-service-context'
 
 const PersonDetail = ({itemId}) => {
+    if (itemId == null) {
+        return <span>Waiting your choose</span>
+    }
     return (
         <SwapiServiceConsumer>
             {
@@ -26,6 +28,9 @@ const PersonDetail = ({itemId}) => {
 }
 
 const PlanetDetail = ({itemId}) => {
+    if (itemId == null) {
+        return <span>Waiting your choose</span>
+    }
     return (
         <SwapiServiceConsumer>
         {
@@ -46,6 +51,9 @@ const PlanetDetail = ({itemId}) => {
 }
 
 const StarshipDetail = ({itemId}) => {
+    if (itemId == null) {
+        return <span>Waiting your choose</span>
+    }
     return (
         <SwapiServiceConsumer>
             {

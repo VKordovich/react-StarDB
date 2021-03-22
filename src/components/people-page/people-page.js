@@ -1,49 +1,24 @@
 import React from 'react';
-import SwapiService from '../../service/service';
+import {withRouter} from 'react-router-dom';
 import AppDoubleBlock from '../app-double-block/app-double-block';
-import ErrorIndicator from '../app-error-indicator/error-indicator';
 
 
 import {PersonDetail,
-    PlanetDetail,
-    StarshipDetail,
-    PersonList,
-    PlanetList,
-    StarshipList} from '../sw-components'
+    PersonList} from '../sw-components'
 
 
-export default class PeoplePage extends React.Component{
+const PeoplePage = ({match, history}) => {
+        const {id} = match.params
 
-    swapiService = new SwapiService();
-
-    state = {
-        selectedId: 1
-    }
-
-    onChangeId = (id) => {
-        this.setState({selectedId: id})
-    }
-
-    
-    render() {
-        if (this.state.wasError) {
-            return <ErrorIndicator/>
-        }
-
-        const listPeople = <PersonList renderFunc={({name, birthYear}) => (`${name} (${birthYear})`)} selectedId={this.onChangeId}/>
-        const listPlanet = <PlanetList renderFunc={({name, population}) => (`${name} (${population})`)} selectedId={this.onChangeId}/>
-        const listStarship = <StarshipList renderFunc={({name, manufacturer}) => (`${name} (${manufacturer})`)} selectedId={this.onChangeId}/>
-        const detailPeople = <PersonDetail itemId={5}/>
-        const detailPlanet = <PlanetDetail itemId={6}/>
-        const detailStarship = <StarshipDetail itemId={9}/>
+        const listPeople = <PersonList renderFunc={({name, birthYear}) => (`${name} (${birthYear})`)} selectedId={(itemId) => { return history.push(itemId) }}/>
+        const detailPeople = <PersonDetail itemId={id}/>
 
 
         return (
             <div>
             <AppDoubleBlock left={listPeople} right={detailPeople}/>
-            <AppDoubleBlock left={listPlanet} right={detailPlanet}/>
-            <AppDoubleBlock left={listStarship} right={detailStarship}/>
             </div>
         )
     }
-} 
+
+    export default withRouter(PeoplePage);

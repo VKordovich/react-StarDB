@@ -1,7 +1,6 @@
 import React from 'react';
 import SwapiService from '../../service/service';
 import Spinner from '../app-spinner/spinner';
-import ErrorButton from '../app-error-button'
 import './app-people-details.css';
 
 
@@ -56,12 +55,11 @@ const InformationView = ({item, image, li}) => {
   const {name} = item
   return (
     <React.Fragment>
-            <img className="person-image" src={image} />
+            <img className="person-image" src={image} alt='Я Picturе'/>
             <div className="card-body">
               <h4>{name}</h4>
               <ul className="list-group list-group-flush">
                 {li}
-                <ErrorButton/>
               </ul>
             </div>
 
